@@ -23,24 +23,9 @@ const fail = { pass: false };
 
 describe('parseJSON', () => {
   const matcherName = 'parseJSON';
-
-  const passMessage = [
-    RECEIVED_COLOR('received'),
-    'value is a',
-    EXPECTED_COLOR('JSON string'),
-  ].join(' ');
-
-  const errorMessage = [
-    RECEIVED_COLOR('received'),
-    'value is not a',
-    EXPECTED_COLOR('JSON string'),
-  ].join(' ');
-
-  const invalidMesage = [
-    RECEIVED_COLOR('received'),
-    'value is not a valid',
-    EXPECTED_COLOR('JSON string'),
-  ].join(' ');
+  const passMessage = 'received value is a JSON string';
+  const errorMessage = 'received value is not a JSON string';
+  const invalidMesage = 'received value is not a valid JSON string';
 
   it('should pass for serialized null', () => {
     expect(
@@ -133,30 +118,40 @@ describe('parseJSON', () => {
       mockedState,
       JSON.stringify(null),
       matcherName
-    );
-    expect((result as SyncExpectationResult).message()).toContain(passMessage);
+    ) as SyncExpectationResult;
+    expect(result.message()).toContain(passMessage);
   });
 
   it('should return error message for not string', () => {
-    const result = parseJSON.call(mockedState, null, matcherName);
-    expect((result as SyncExpectationResult).message()).toContain(errorMessage);
+    const result = parseJSON.call(
+      mockedState,
+      null,
+      matcherName
+    ) as SyncExpectationResult;
+    expect(result.message()).toContain(errorMessage);
   });
 
   it('should return invalid message for invalid JSON string', () => {
-    const result = parseJSON.call(mockedState, 'test', matcherName);
-    expect((result as SyncExpectationResult).message()).toContain(
-      invalidMesage
-    );
+    const result = parseJSON.call(
+      mockedState,
+      'test',
+      matcherName
+    ) as SyncExpectationResult;
+    expect(result.message()).toContain(invalidMesage);
   });
 });
 
 describe('toBeJSON', () => {
-  it('should be json', () => {
-    expect(JSON.stringify({ test: `${new Date()}` })).toBeJSON();
+  it('should be json sting', () => {
+    expect(JSON.stringify({ test: new Date() })).toBeJSON();
   });
 
-  it('should not be json', () => {
+  it('should not be json string', () => {
     expect(null).not.toBeJSON();
+  });
+
+  it('should not be valid json string', () => {
+    expect('[1, 2, 3, ]').not.toBeJSON();
   });
 });
 
